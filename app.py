@@ -14,7 +14,10 @@ app = Flask(__name__)
 
 line_bot_api = LineBotApi('iG/aMf7s4WYCXhWAbJzpoSPQ5bdSvhzN49TqHMOgooFth/XwsZ2DZVk3SkRWgrYpDCKZT8k3r7cWfcr7FoMfUEV9WbGATAaL7M0VXkPwDiiGUuB8BaU7lN6dQYM+OS9cjJz0cg8cSEGPrZR8IVTSFAdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('83396750185dc1029f875099f28d3c72')
-#line_bot_api.reply_message(reply_token, TextSendMessage(text='Hello World!'))
+
+@app.route("/")
+def test():
+    return "OK"
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -37,10 +40,16 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    if event.message.text == "こんにちは":
+        reply_message = "はい、こんにちは"
+    elif event.message.text == "こんばんは":
+        reply_message = "はい、こんばんは"
+    else:
+        #reply_message = f"あなたは、{event.message.text}と言いました"
+        reply_message = "..."
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
-
+        TextSendMessage(text=reply_message))
 
 if __name__ == "__main__":
     app.run()
